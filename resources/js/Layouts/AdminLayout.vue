@@ -5,9 +5,10 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
-const showingNavigationDropdown = ref(false);
+import { Link ,usePage} from '@inertiajs/vue3';
 
+const showingNavigationDropdown = ref(false);
+const page = usePage();
 </script>
 
 <template>
@@ -29,8 +30,14 @@ const showingNavigationDropdown = ref(false);
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                <NavLink :href="route('category.index')" :active="route().current('dashboard')">
                                     Dashboard
+                                </NavLink>
+                                <NavLink :href="route('category.create')" :active="route().current('dashboard')">
+                                    Add
+                                </NavLink>
+                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                    Edit
                                 </NavLink>
                             </div>
                         </div>
@@ -145,6 +152,9 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Content -->
             <main>
+                <div v-if="page.props.flash.success">
+                    {{ page.props.flash.success }}
+                </div>
                 <slot />
             </main>
         </div>
