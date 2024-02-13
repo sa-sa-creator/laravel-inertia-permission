@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Response;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Inertia\Response;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Category::class, 'category');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -15,7 +21,8 @@ class CategoryController extends Controller
     {
         return inertia('Category/Index',
         [
-            'categorys' => Category::all()
+            'categorys' => Category::orderByDesc('cate_id')
+            ->paginate(10)
         ]);
     }
 
@@ -43,9 +50,17 @@ class CategoryController extends Controller
         //     ])
         // ]);
 
-        Category::create($request->validate([
-            'cate_name' => 'required',
-            'cate_description' => 'required'
+        // Category::create(
+        //     $request->validate([
+        //     'cate_name' => 'required',
+        //     'cate_description' => 'required'
+        // ]));
+
+        //Create a category has an owner
+        $request->user()->category()->create(
+            $request->validate([
+                'cate_name' => 'required',
+                'cate_description' => 'required'
         ]));
         return redirect()->route('category.index')
         ->with('success','Category was created!');
@@ -56,6 +71,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+       // $this->authorize('view',$category);
        return inertia('Category/Show',
        [
             'category' => $category
