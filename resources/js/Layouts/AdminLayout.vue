@@ -6,8 +6,10 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link ,usePage} from '@inertiajs/vue3';
-
+import { usePermission} from '@/permissions';
+const { hasRole } = usePermission();
 const showingNavigationDropdown = ref(false);
+
 const page = usePage();
 </script>
 

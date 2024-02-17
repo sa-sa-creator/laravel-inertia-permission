@@ -6,7 +6,10 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import { usePermission} from '@/permissions';
+const { hasRole } = usePermission();
 const showingNavigationDropdown = ref(false);
+
 
 </script>
 
@@ -31,6 +34,12 @@ const showingNavigationDropdown = ref(false);
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
+                                </NavLink>
+                                <NavLink
+                                v-if="hasRole('admin')"
+                                 :href="route('admin.index')"
+                                 :active="route().current('admin.index')">
+                                    Admin
                                 </NavLink>
                             </div>
                         </div>
