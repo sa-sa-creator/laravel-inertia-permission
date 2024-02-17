@@ -7,6 +7,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
     ];
 
     /**
@@ -33,6 +35,12 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function category(): HasMany{
+        return $this->hasMany(
+            \App\Models\Category::class,
+             'by_user_id');
+    }
 
     /**
      * The attributes that should be cast.

@@ -35,9 +35,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+<<<<<<< HEAD
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+=======
+    Route::resource('category', CategoryController::class);
+>>>>>>> crud_data
 });
-Route::resource('category', CategoryController::class);
+
 
 
 // Route::resource('photos', PhotoController::class)->only([
