@@ -6,8 +6,8 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
-import { usePermission } from '@/composable/permissions'
-const { hasRole } = usePermission();
+import { usePage} from '@inertiajs/vue3';
+const page = usePage();
 const showingNavigationDropdown = ref(false);
 </script>
 
@@ -33,11 +33,14 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink
-                                v-if="hasRole('admin')"
-                                :href="route('admin.index')"
-                                :active="route().current('admin.index')">
-                                    Admin
+                                <NavLink :href="route('users.index')" :active="route().current('users.index')">
+                                    User
+                                </NavLink>
+                                <NavLink :href="route('roles.index')" :active="route().current('roles.index')">
+                                    Role
+                                </NavLink>
+                                <NavLink :href="route('permissions.index')" :active="route().current('permissions.index')">
+                                    Permission
                                 </NavLink>
                             </div>
                         </div>
@@ -152,6 +155,10 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Content -->
             <main>
+                <div v-if="page.props.flash.success">
+                    {{ page.props.flash.success }}
+
+                </div>
                 <slot />
             </main>
         </div>
