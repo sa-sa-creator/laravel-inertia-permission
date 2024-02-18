@@ -32,14 +32,30 @@ const page = usePage();
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('category.index')" :active="route().current('dashboard')">
+                                <NavLink
+                                :href="route('category.index')"
+                                :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink :href="route('category.create')" :active="route().current('dashboard')">
-                                    Add
+                                <NavLink
+                                :href="route('category.create')"
+                                :active="route().current('dashboard')">
+                                    Add Category
                                 </NavLink>
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Edit
+                                <NavLink
+                                :href="route('user.index')"
+                                :active="route().current('user.index')">
+                                    User
+                                </NavLink>
+                                <NavLink
+                                :href="route('role.index')"
+                                :active="route().current('role.index')">
+                                    Role
+                                </NavLink>
+                                <NavLink
+                                :href="route('permission.index')"
+                                :active="route().current('permission.index')">
+                                    Permission
                                 </NavLink>
                             </div>
                         </div>
