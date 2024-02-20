@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateRoleRequest;
+use App\Http\Resources\PermissionResource;
 use App\Http\Resources\RoleResource;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -14,7 +17,7 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index():Response
+    public function index(): Response
     {
         return Inertia::render('Admin/Role/Index',
     [
@@ -25,7 +28,7 @@ class RoleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Admin/Role/Create');
     }
@@ -33,7 +36,7 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreateRoleRequest $request)
+    public function store(CreateRoleRequest $request): RedirectResponse
     {
         Role::create($request->validated());
         return to_route('roles.index')
@@ -51,12 +54,13 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id): Response
     {
         $role = Role::findById($id);
         return Inertia::render('Admin/Role/Edit',
         [
-            'role' => new RoleResource($role)
+            'role' => new RoleResource($role),
+            'permissions' => PermissionResource::collection(Permission::all())
         ]);
 
     }
@@ -64,10 +68,12 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CreateRoleRequest $request, string $id)
+    public function update(CreateRoleRequest $request, string $id): RedirectResponse
     {
         $role = Role::findById($id);
-        $role->update($request->validated());
+        $role->update([
+            'name' => $request->name
+        ]);
         return to_route('roles.index')
         ->with('success','Role was updated!');
     }
@@ -75,7 +81,7 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): RedirectResponse
     {
         $role = Role::findById($id);
         $role->delete();

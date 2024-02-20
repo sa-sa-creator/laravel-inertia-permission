@@ -10,10 +10,10 @@
                 <label for="role.id">Id: </label>{{ role.id }}
                 <label for="role.name">, Role: </label>{{ role.name }}
                 <Link
-                :href="`/roles/${role.id}/edit`"
+                :href="route('roles.edit',role.id)"
                 class="text-green-600">Edit</Link> |
                 <Link
-                :href="`/roles/${role.id}`"
+                :href="route('roles.destroy',role.id)"
                 method="delete" as="button"
                 class="text-red-600">Delete</Link>
 

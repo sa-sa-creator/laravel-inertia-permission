@@ -33,9 +33,9 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('/users',UserController::class);
-Route::resource('/roles',RoleController::class);
-Route::resource('/permissions',PermissionController::class);
+Route::resource('users',UserController::class);
+Route::resource('roles',RoleController::class);
+Route::resource('permissions',PermissionController::class);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
