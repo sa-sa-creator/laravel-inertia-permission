@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\RoleResource;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -11,6 +12,7 @@ use Illuminate\Validation\Rules;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -30,7 +32,10 @@ class UserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Admin/User/Create');
+        return Inertia::render('Admin/User/Create',
+        [
+            'roles' => RoleResource::collection(Role::all())
+        ]);
     }
 
     /**
@@ -68,7 +73,8 @@ class UserController extends Controller
     {
         return Inertia::render('Admin/User/Edit',
         [
-            'user' => new UserResource($user)
+            'user' => new UserResource($user),
+            'roles' => RoleResource::collection(Role::all())
         ]);
     }
 
@@ -80,12 +86,14 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|' . Rule::unique('users','email')->ignore($user),
+            'roles' => ['sometimes', 'array']
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
         ]);
+        $user->syncRoles($request->roles);
         return to_route('users.index')
         ->with('success','User was Update.');
     }

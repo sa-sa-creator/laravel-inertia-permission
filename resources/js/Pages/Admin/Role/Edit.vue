@@ -26,12 +26,21 @@
                 </div>
             </div>
         </form>
+        <div v-for="permission in role.permissions" :key="permission.id">
+            <label for="permission.id">{{ permission.id }}</label>
+            <label for="permission.name">{{ permission.name }}</label>
+            <Link
+             class="text-red-700">
+                Revoke
+            </Link>
+        </div>
     </AdminLayout>
     </template>
 
     <script setup>
     import AdminLayout from '@/Layouts/AdminLayout.vue';
-    import { useForm } from '@inertiajs/vue3'
+    import { useForm, Link } from '@inertiajs/vue3'
+    import { onMounted } from 'vue';
     import VueMultiselect from 'vue-multiselect'
 
     const props = defineProps({
@@ -42,6 +51,10 @@
         name: props.role?.name,
         permissions: []
     })
+
+    onMounted(()=>{
+        form.permissions = props.role?.permissions;
+    });
     //const update = ()=> form.put(route('roles.update',role.id));
 
     </script>

@@ -5,15 +5,17 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-
+import VueMultiselect from 'vue-multiselect'
 
 const props = defineProps({
-    user: Object
+    user: Object,
+    roles: Array
 });
 
 const form = useForm({
     name: props.user?.name,
     email: props.user?.email,
+    roles: []
 });
 
 
@@ -36,7 +38,7 @@ const submit = () => {
                 <TextInput
                     id="name"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="block w-full mt-1"
                     v-model="form.name"
                     required
                     autofocus
@@ -52,7 +54,7 @@ const submit = () => {
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="block w-full mt-1"
                     v-model="form.email"
                     required
                     autocomplete="username"
@@ -61,7 +63,17 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-
+            <div>
+                <VueMultiselect
+                        v-model="form.roles"
+                        :options="roles"
+                        :multiple="false"
+                        :close-on-select="true"
+                        placeholder="Pick some"
+                        label="name"
+                        track-by="id"
+                />
+            </div>
 
             <div class="flex items-center justify-end mt-4">
 
@@ -74,3 +86,5 @@ const submit = () => {
     </div>
     </AdminLayout>
 </template>
+
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateRoleRequest;
+use App\Http\Requests\PermissionRequest;
 use App\Http\Resources\PermissionResource;
 use App\Http\Resources\RoleResource;
 use Illuminate\Http\RedirectResponse;
@@ -30,7 +31,9 @@ class RoleController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Admin/Role/Create');
+        return Inertia::render('Admin/Role/Create',[
+            'permissions' => PermissionResource::collection(Permission::all())
+        ]);
     }
 
     /**
@@ -38,7 +41,10 @@ class RoleController extends Controller
      */
     public function store(CreateRoleRequest $request): RedirectResponse
     {
-        Role::create($request->validated());
+        $role =Role::create($request->validated());
+        if($request->has('permissions')){
+            $role->syncPermissions($request->permissions);
+        }
         return to_route('roles.index')
         ->with('success','Role was created!');
     }
@@ -54,9 +60,10 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id): Response
+    public function edit(Role $role): Response
     {
-        $role = Role::findById($id);
+       // $role = Role::findById($id);
+        $role->load('permissions');
         return Inertia::render('Admin/Role/Edit',
         [
             'role' => new RoleResource($role),
@@ -68,12 +75,14 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CreateRoleRequest $request, string $id): RedirectResponse
+    public function update(CreateRoleRequest $request, Role $role): RedirectResponse
     {
-        $role = Role::findById($id);
-        $role->update([
-            'name' => $request->name
-        ]);
+        // $role = Role::findById($id);
+        // $role->update([
+        //     'name' => $request->name
+        // ]);
+        $role->update($request->validated());
+        $role->syncPermissions($request->permissions);
         return to_route('roles.index')
         ->with('success','Role was updated!');
     }
@@ -81,9 +90,9 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): RedirectResponse
+    public function destroy(Role $role): RedirectResponse
     {
-        $role = Role::findById($id);
+        //$role = Role::findById($id);
         $role->delete();
         return back()->with('success','Role was updated!');
     }

@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Spatie\Permission\Models\Role;
 
 class UserResource extends JsonResource
 {
@@ -18,8 +19,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'roles' => $this->getRoleNames(),
-            'permissions' => $this->getPermissionNames(),
+            'roles' => RoleResource::collection($this->whenLoaded('roles')),
         ];
     }
 }
